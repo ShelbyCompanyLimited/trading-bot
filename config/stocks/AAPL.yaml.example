@@ -1,0 +1,111 @@
+# Stock Configuration: AAPL (Apple Inc.)
+# Each stock has its own configuration file with symbol, strategy, and stock-specific parameters
+# This config is used for both live trading and backtesting
+
+# Stock Information
+stock:
+  symbol: "AAPL"            # Stock symbol (must match filename)
+  enabled: true             # Enable/disable trading for this stock
+  description: "Apple Inc."
+
+# Backtesting Configuration
+backtest:
+  enabled: true             # Enable backtesting for this stock
+  
+  # Date Range
+  start_date: "2024-01-01"  # Start date for backtest
+  end_date: "2024-12-31"    # End date for backtest
+  
+  # Timeframe
+  timeframe: "1 hour"       # Bar size: "1 min", "5 min", "15 min", "1 hour", "4 hour", "1 day"
+  
+  # Data Source
+  data_source: "ib"         # "ib" for Interactive Brokers, "csv" for local files
+  
+  # CSV Data Source (if data_source = "csv")
+  csv_settings:
+    directory: "data/historical"
+    file_format: "{symbol}_{timeframe}.csv"
+    date_column: "date"
+    price_columns:
+      open: "open"
+      high: "high"
+      low: "low"
+      close: "close"
+      volume: "volume"
+  
+  # Commission and Slippage
+  commission_per_trade: 1.0  # $1 per trade (round trip)
+  slippage_percent: 0.001     # 0.1% slippage per trade
+  
+  # Output Settings
+  generate_charts: true      # Generate visualization charts
+  generate_report: true       # Generate HTML report
+  save_trades: true          # Save trade data to CSV
+  chart_format: "png"        # Chart format: "png", "html", "pdf"
+  chart_library: "matplotlib" # "matplotlib" or "plotly" (for interactive)
+  
+  # Chart Settings
+  charts:
+    price_with_trades: true  # Price chart with entry/exit points
+    equity_curve: true       # Account equity over time
+    drawdown: true           # Drawdown chart
+    trade_distribution: true  # P&L distribution
+    monthly_returns: true     # Monthly returns
+    strategy_analysis: true   # Strategy-specific analysis
+
+# Break and Retest Strategy Configuration for this stock
+strategy:
+  name: "BreakAndRetestStrategy"
+  
+  # ============================================
+  # Level Identification Parameters
+  # ============================================
+  
+  lookback_period: 50        # Bars to look back for support/resistance levels
+  min_touch_count: 2         # Minimum touches to qualify as S/R level
+  level_tolerance: 0.005     # 0.5% tolerance for clustering nearby levels
+  min_level_strength: 0.5    # Minimum level strength (0.0-1.0)
+  
+  # ============================================
+  # Breakout Detection Parameters
+  # ============================================
+  
+  break_threshold: 0.005     # 0.5% break above/below level required
+  require_volume_confirmation: true
+  volume_multiplier: 1.2     # Volume must be 1.2x average for confirmation
+  breakout_bars: 2           # Number of bars to confirm breakout
+  
+  # ============================================
+  # Retest Parameters
+  # ============================================
+  
+  retest_threshold: 0.01     # 1% retest zone around broken level
+  max_retest_bars: 10        # Maximum bars to wait for retest
+  retest_bounce_threshold: 0.003  # 0.3% bounce required for retest confirmation
+  
+  # ============================================
+  # Entry Parameters
+  # ============================================
+  
+  min_confidence: 0.6        # Minimum confidence (0.0-1.0) to enter trade
+  entry_on_bounce: true      # Enter on bounce from retest level
+  entry_buffer: 0.002         # 0.2% buffer above/below retest level for entry
+  
+  # ============================================
+  # Exit Parameters
+  # ============================================
+  
+  profit_target_multiplier: 1.5  # Profit target = 1.5x risk
+  use_trailing_stop: false
+  trailing_stop_percentage: 0.01  # 1% trailing stop if enabled
+
+# Stock-Specific Risk Management (optional overrides)
+risk:
+  # Override global risk settings for this stock
+  # max_risk_per_trade: 0.015  # Risk 1.5% for AAPL (lower than global)
+  # stop_loss_percentage: 0.025  # 2.5% stop loss for AAPL
+
+# Notes
+# AAPL is a relatively stable stock, so we use standard parameters
+# Adjust min_confidence and thresholds based on your backtesting results

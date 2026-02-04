@@ -1,0 +1,40 @@
+# Interactive Brokers Connection Configuration
+# This file contains only IB connection settings
+# Shared across all stock configurations
+
+ib:
+  host: "127.0.0.1"          # IB Gateway/TWS host (usually localhost)
+  port: 7497                 # API port (7497 = TWS paper, 4001 = Gateway paper)
+  client_id: 1              # Unique client ID (1-100)
+  account: ""               # Account number (empty = default account)
+
+# Trading Parameters (applied to all stocks)
+trading:
+  # Risk management
+  max_risk_per_trade: 0.02   # Risk 2% of account per trade (0.02 = 2%)
+  max_positions: 5           # Maximum number of open positions
+  stop_loss_percentage: 0.02 # Default stop loss percentage (0.02 = 2%)
+  daily_loss_limit: 0.05     # Stop trading if daily loss exceeds 5%
+  
+  # Order settings
+  order_type: "MKT"          # MKT for market orders, LMT for limit orders
+  limit_order_offset: 0.01    # Offset for limit orders (if using LMT)
+
+# Logging Configuration
+logging:
+  level: "INFO"              # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  file: "logs/trading_bot.log"
+  max_bytes: 10485760       # 10MB log file size before rotation
+  backup_count: 5           # Number of backup log files to keep
+  console: true             # Log to console
+
+# Bot Settings
+bot:
+  update_interval: 60       # Seconds between strategy evaluations
+  enable_trading: false     # Set to true to enable live trading (use with caution!)
+  
+  # Market Hours (optional - for filtering trades)
+  # trade_during_market_hours: true
+  # market_open: "09:30"
+  # market_close: "16:00"
+  # timezone: "America/New_York"
